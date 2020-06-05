@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 
 @Entity('users')
-class Appointment {
+class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -24,7 +24,7 @@ class Appointment {
   created_at: Date;
 
   @UpdateDateColumn()
-  udpated_at: Date;
+  updated_at: Date;
 }
 
-export default Appointment;
+export default User;
