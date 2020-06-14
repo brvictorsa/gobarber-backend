@@ -33,7 +33,47 @@ describe('AuthenticationUser', () => {
     expect(response.user).toEqual(user);
   });
 
-  // it('should not be able to authenticate with invalid email', async () => {});
+  it('should not be able to authenticate with invalid email', async () => {
+    const fakeUsersRepository = new FakeUsersRepository();
+    const fakeHashProvider = new FakeHashProvider();
 
-  // it('should not be able to authenticate with incorrect password', async () => {});
+    const authenticateUser = new AuthenticationUserService(
+      fakeUsersRepository,
+      fakeHashProvider,
+    );
+
+    expect(
+      authenticateUser.execute({
+        email: 'johndoe@example.com',
+        password: '123546',
+      }),
+    ).rejects.toBeInstanceOf(AppError);
+  });
+
+  it('should not be able to authenticate with incorrect password', async () => {
+    const fakeUsersRepository = new FakeUsersRepository();
+    const fakeHashProvider = new FakeHashProvider();
+
+    const createUser = new CreateUserService(
+      fakeUsersRepository,
+      fakeHashProvider,
+    );
+    const authenticateUser = new AuthenticationUserService(
+      fakeUsersRepository,
+      fakeHashProvider,
+    );
+
+    const user = await createUser.execute({
+      name: 'Joh Doe',
+      email: 'johndoe@example.com',
+      password: '123456',
+    });
+
+    expect(
+      authenticateUser.execute({
+        email: 'johndoe@example.com',
+        password: '123123',
+      }),
+    ).rejects.toBeInstanceOf(AppError);
+  });
 });
